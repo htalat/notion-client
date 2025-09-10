@@ -182,6 +182,13 @@
     </div>
 
     <script>
+        // Configuration
+        const CONFIG = {
+            API_BASE: 'https://api.htalat.com',
+            // For local development, use:
+            // API_BASE: 'http://localhost:3000',
+        };
+        
         async function loadWeeklyData() {
             const container = document.getElementById('weeks-container');
             const loading = document.getElementById('loading');
@@ -190,10 +197,23 @@
             try {
                 for (let week = 0; week < 10; week++) {
                     try {
-                        const response = await fetch(`./data/week-${week}.json`);
-                        if (!response.ok) continue;
+                        const response = await fetch(`${CONFIG.API_BASE}/knowledge-base?weeksAgo=${week}`);
+                        if (!response.ok) {
+                            console.warn(`Failed to load week ${week}: ${response.statusText}`);
+                            continue;
+                        }
                         
-                        const weekData = await response.json();
+                        const apiData = await response.json();
+                        
+                        // Transform API response to match expected format
+                        const weekData = {
+                            week,
+                            weekLabel: getWeekLabel(week),
+                            dateRange: apiData.dateRange,
+                            pages: apiData.pages,
+                            totalCount: apiData.totalCount
+                        };
+                        
                         renderWeek(weekData, container);
                     } catch (err) {
                         console.warn(`Failed to load week ${week}:`, err);
@@ -205,6 +225,12 @@
                 errorDiv.style.display = 'block';
                 errorDiv.textContent = `Error loading data: ${error.message}`;
             }
+        }
+        
+        function getWeekLabel(weeksAgo) {
+            if (weeksAgo === 0) return 'This Week';
+            if (weeksAgo === 1) return 'Last Week';
+            return `${weeksAgo} Weeks Ago`;
         }
         
         function renderWeek(weekData, container) {
