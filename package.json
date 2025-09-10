@@ -1,0 +1,21 @@
+{
+  "name": "notion-weekly-tracker",
+  "version": "1.0.0",
+  "description": "Track new Notion pages by week",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "generate-data": "node scripts/generate-data.js"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.3",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "dotenv": "^16.3.1"
+  },
+  "keywords": ["notion", "tracking", "pages"],
+  "author": "",
+  "license": "MIT"
+}
