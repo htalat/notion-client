@@ -54,6 +54,3 @@ pids
 
 # Build output
 dist/
-
-# Keep the data directory structure and allow generated files
-!docs/data/.gitkeep
