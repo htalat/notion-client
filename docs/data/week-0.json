@@ -1,0 +1,22 @@
+{
+  "week": 0,
+  "weekLabel": "This Week",
+  "dateRange": "Sep 8, 2025 - Sep 14, 2025",
+  "start": "2025-09-07T19:00:00.000Z",
+  "end": "2025-09-14T18:59:59.999Z",
+  "pages": [
+    {
+      "title": "The Training Imperative",
+      "url": "https://www.notion.so/The-Training-Imperative-2699b1d5d15d81108e7bce6d5de67297",
+      "createdTime": "9/10/2025",
+      "linkProperty": "https://sdan.io/blog/training-imperative",
+      "parentInfo": {
+        "type": "database",
+        "title": "AI",
+        "id": "15a9b1d5-d15d-8093-b77b-e4424f03b20a"
+      },
+      "id": "2699b1d5-d15d-8110-8e7b-ce6d5de67297"
+    }
+  ],
+  "generatedAt": "2025-09-10T01:32:31.368Z"
+}

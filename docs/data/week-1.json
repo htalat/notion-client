@@ -1,0 +1,70 @@
+{
+  "week": 1,
+  "weekLabel": "Last Week",
+  "dateRange": "Sep 1, 2025 - Sep 7, 2025",
+  "start": "2025-08-31T19:00:00.000Z",
+  "end": "2025-09-07T18:59:59.999Z",
+  "pages": [
+    {
+      "title": "Writing Arabic in English",
+      "url": "https://www.notion.so/Writing-Arabic-in-English-2679b1d5d15d81e58b10cd073eb991c7",
+      "createdTime": "9/7/2025",
+      "linkProperty": null,
+      "parentInfo": {
+        "type": "page",
+        "title": "Apple",
+        "id": "49c6a95c-56d4-4f30-a15c-0b107320739a"
+      },
+      "id": "2679b1d5-d15d-81e5-8b10-cd073eb991c7"
+    },
+    {
+      "title": "Identify AI Agents with HTTP Message Signatures | Zuplo Blog",
+      "url": "https://www.notion.so/Identify-AI-Agents-with-HTTP-Message-Signatures-Zuplo-Blog-2679b1d5d15d81258c71e73087de032d",
+      "createdTime": "9/7/2025",
+      "linkProperty": null,
+      "parentInfo": {
+        "type": "page",
+        "title": "Web",
+        "id": "17d32194-101d-4efc-9487-9e1295708159"
+      },
+      "id": "2679b1d5-d15d-8125-8c71-e73087de032d"
+    },
+    {
+      "title": "cmd - The best AI in Xcode, open source",
+      "url": "https://www.notion.so/cmd-The-best-AI-in-Xcode-open-source-2659b1d5d15d817589a7eaa82485328c",
+      "createdTime": "9/5/2025",
+      "linkProperty": null,
+      "parentInfo": {
+        "type": "page",
+        "title": "Apple",
+        "id": "49c6a95c-56d4-4f30-a15c-0b107320739a"
+      },
+      "id": "2659b1d5-d15d-8175-89a7-eaa82485328c"
+    },
+    {
+      "title": "On evaluating agents – aunhumano",
+      "url": "https://www.notion.so/On-evaluating-agents-aunhumano-2649b1d5d15d8179ba99d56637996441",
+      "createdTime": "9/4/2025",
+      "linkProperty": "https://aunhumano.com/index.php/2025/09/03/on-evaluating-agents/",
+      "parentInfo": {
+        "type": "database",
+        "title": "AI",
+        "id": "15a9b1d5-d15d-8093-b77b-e4424f03b20a"
+      },
+      "id": "2649b1d5-d15d-8179-ba99-d56637996441"
+    },
+    {
+      "title": "An intro to manual slot assignment – Nathan Knowler",
+      "url": "https://www.notion.so/An-intro-to-manual-slot-assignment-Nathan-Knowler-2639b1d5d15d81ff839ac56e94ba6713",
+      "createdTime": "9/4/2025",
+      "linkProperty": null,
+      "parentInfo": {
+        "type": "page",
+        "title": "Web",
+        "id": "17d32194-101d-4efc-9487-9e1295708159"
+      },
+      "id": "2639b1d5-d15d-81ff-839a-c56e94ba6713"
+    }
+  ],
+  "generatedAt": "2025-09-10T01:32:35.197Z"
+}

@@ -1,0 +1,22 @@
+{
+  "week": 2,
+  "weekLabel": "2 Weeks Ago",
+  "dateRange": "Aug 25, 2025 - Aug 31, 2025",
+  "start": "2025-08-24T19:00:00.000Z",
+  "end": "2025-08-31T18:59:59.999Z",
+  "pages": [
+    {
+      "title": "Low Level Academy",
+      "url": "https://www.notion.so/Low-Level-Academy-25f9b1d5d15d8153874eed3f23c76699",
+      "createdTime": "8/30/2025",
+      "linkProperty": null,
+      "parentInfo": {
+        "type": "page",
+        "title": "Courses",
+        "id": "f4983049-304e-4483-9a11-5c40f1a0b3fc"
+      },
+      "id": "25f9b1d5-d15d-8153-874e-ed3f23c76699"
+    }
+  ],
+  "generatedAt": "2025-09-10T01:32:36.588Z"
+}

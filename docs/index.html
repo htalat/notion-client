@@ -209,9 +209,9 @@
                         const weekData = {
                             week,
                             weekLabel: getWeekLabel(week),
-                            dateRange: apiData.dateRange,
-                            pages: apiData.pages,
-                            totalCount: apiData.totalCount
+                            dateRange: apiData.dateRange || generateDateRange(week),
+                            pages: apiData.pages || [],
+                            totalCount: apiData.totalCount || (apiData.pages ? apiData.pages.length : 0)
                         };
                         
                         renderWeek(weekData, container);
@@ -231,6 +231,25 @@
             if (weeksAgo === 0) return 'This Week';
             if (weeksAgo === 1) return 'Last Week';
             return `${weeksAgo} Weeks Ago`;
+        }
+        
+        function generateDateRange(weeksAgo) {
+            const now = new Date();
+            const currentDay = now.getDay();
+            const daysToMonday = currentDay === 0 ? 6 : currentDay - 1;
+            
+            const startOfThisWeek = new Date(now);
+            startOfThisWeek.setDate(now.getDate() - daysToMonday);
+            startOfThisWeek.setHours(0, 0, 0, 0);
+            
+            const startOfTargetWeek = new Date(startOfThisWeek);
+            startOfTargetWeek.setDate(startOfThisWeek.getDate() - (weeksAgo * 7));
+            
+            const endOfTargetWeek = new Date(startOfTargetWeek);
+            endOfTargetWeek.setDate(startOfTargetWeek.getDate() + 6);
+            
+            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+            return `${startOfTargetWeek.toLocaleDateString('en-US', options)} - ${endOfTargetWeek.toLocaleDateString('en-US', options)}`;
         }
         
         function renderWeek(weekData, container) {
