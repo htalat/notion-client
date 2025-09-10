@@ -52,6 +52,5 @@ pids
 # Local development
 .cache/
 
-# Keep the data directory structure but ignore generated files
-docs/data/*.json
+# Keep the data directory structure and allow generated files
 !docs/data/.gitkeep
