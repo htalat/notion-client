@@ -7,13 +7,6 @@
     <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>📅 Notion Weekly Tracker</h1>
-        <div id="loading" class="loading">Loading weekly data...</div>
-        <div id="error" class="error" style="display: none;"></div>
-        <div id="weeks-container"></div>
-    </div>
-
     <!-- Templates -->
     <template id="week-template">
         <div class="week-section">
@@ -58,6 +51,12 @@
     <template id="external-link-template">
         <span>🔗 <a href="" target="_blank" class="page-link" data-slot="external-url">External Link</a></span>
     </template>
+    <div class="container">
+        <h1>📅 Notion Weekly Tracker</h1>
+        <div id="loading" class="loading">Loading weekly data...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        <div id="weeks-container"></div>
+    </div>
     <script type="module" src="/src/main.js"></script>
 </body>
 </html>
