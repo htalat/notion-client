@@ -13,6 +13,51 @@
         <div id="error" class="error" style="display: none;"></div>
         <div id="weeks-container"></div>
     </div>
+
+    <!-- Templates -->
+    <template id="week-template">
+        <div class="week-section">
+            <div class="week-header">
+                <div>
+                    <h2 class="week-title">
+                        <slot name="week-label"></slot>
+                        <span class="collapse-indicator">▼</span>
+                    </h2>
+                    <div class="week-date">
+                        <slot name="date-range"></slot>
+                    </div>
+                </div>
+                <span class="page-count">
+                    <slot name="page-count"></slot>
+                </span>
+            </div>
+            <div class="week-content">
+                <slot name="week-content"></slot>
+            </div>
+        </div>
+    </template>
+
+    <template id="page-item-template">
+        <li class="page-item">
+            <div class="page-title">
+                <slot name="page-title"></slot>
+            </div>
+            <div class="page-meta">
+                <span>📅 Created: <slot name="created-time"></slot></span>
+                <slot name="parent-info"></slot>
+                <slot name="external-link"></slot>
+                <span>📄 <a href="" target="_blank" class="page-link" data-slot="notion-url">Open in Notion</a></span>
+            </div>
+        </li>
+    </template>
+
+    <template id="parent-info-template">
+        <span><slot name="parent-icon"></slot> <slot name="parent-title"></slot></span>
+    </template>
+
+    <template id="external-link-template">
+        <span>🔗 <a href="" target="_blank" class="page-link" data-slot="external-url">External Link</a></span>
+    </template>
     <script type="module" src="/src/main.js"></script>
 </body>
 </html>
