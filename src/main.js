@@ -25,9 +25,9 @@ async function loadWeeklyData() {
                 const weekData = {
                     week,
                     weekLabel: getWeekLabel(week),
-                    dateRange: apiData.dateRange || generateDateRange(week),
+                    dateRange: apiData.dateRange,
                     pages: apiData.pages || [],
-                    totalCount: apiData.totalCount || (apiData.pages ? apiData.pages.length : 0)
+                    totalCount: apiData.totalCount
                 };
                 
                 renderWeek(weekData, container);
@@ -49,24 +49,6 @@ function getWeekLabel(weeksAgo) {
     return `${weeksAgo} Weeks Ago`;
 }
 
-function generateDateRange(weeksAgo) {
-    const now = new Date();
-    const currentDay = now.getDay();
-    const daysToMonday = currentDay === 0 ? 6 : currentDay - 1;
-    
-    const startOfThisWeek = new Date(now);
-    startOfThisWeek.setDate(now.getDate() - daysToMonday);
-    startOfThisWeek.setHours(0, 0, 0, 0);
-    
-    const startOfTargetWeek = new Date(startOfThisWeek);
-    startOfTargetWeek.setDate(startOfThisWeek.getDate() - (weeksAgo * 7));
-    
-    const endOfTargetWeek = new Date(startOfTargetWeek);
-    endOfTargetWeek.setDate(startOfTargetWeek.getDate() + 6);
-    
-    const options = { month: 'short', day: 'numeric', year: 'numeric' };
-    return `${startOfTargetWeek.toLocaleDateString('en-US', options)} - ${endOfTargetWeek.toLocaleDateString('en-US', options)}`;
-}
 
 function renderWeek(weekData, container) {
     const section = document.createElement('div');
@@ -87,7 +69,7 @@ function renderWeek(weekData, container) {
     
     const pageCount = document.createElement('span');
     pageCount.className = 'page-count';
-    pageCount.textContent = `${weekData.pages.length} page${weekData.pages.length !== 1 ? 's' : ''}`;
+    pageCount.textContent = `${weekData.totalCount} page${weekData.totalCount !== 1 ? 's' : ''}`;
     
     weekHeader.appendChild(titleDiv);
     weekHeader.appendChild(pageCount);
