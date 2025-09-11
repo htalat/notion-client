@@ -11,17 +11,30 @@ async function loadWeeklyData() {
     const errorDiv = document.getElementById('error');
     
     try {
-        for (let week = 0; week < 10; week++) {
-            try {
-                const response = await fetch(`${CONFIG.API_BASE}/knowledge-base?weeksAgo=${week}`);
-                if (!response.ok) {
-                    console.warn(`Failed to load week ${week}: ${response.statusText}`);
-                    continue;
-                }
-                
-                const apiData = await response.json();
-                
-                // Transform API response to match expected format
+        // Create all fetch promises in parallel for better performance
+        const weekPromises = Array.from({ length: 10 }, (_, week) => 
+            fetch(`${CONFIG.API_BASE}/knowledge-base?weeksAgo=${week}`)
+                .then(response => {
+                    if (!response.ok) {
+                        console.warn(`Failed to load week ${week}: ${response.statusText}`);
+                        return null;
+                    }
+                    return response.json().then(apiData => ({ week, apiData }));
+                })
+                .catch(err => {
+                    console.warn(`Failed to load week ${week}:`, err);
+                    return null;
+                })
+        );
+        
+        // Wait for all requests to complete
+        const results = await Promise.all(weekPromises);
+        
+        // Process successful results in order
+        results
+            .filter(result => result !== null)
+            .sort((a, b) => a.week - b.week) // Ensure weeks are rendered in order
+            .forEach(({ week, apiData }) => {
                 const weekData = {
                     week,
                     weekLabel: getWeekLabel(week),
@@ -31,10 +44,8 @@ async function loadWeeklyData() {
                 };
                 
                 renderWeek(weekData, container);
-            } catch (err) {
-                console.warn(`Failed to load week ${week}:`, err);
-            }
-        }
+            });
+        
         loading.style.display = 'none';
     } catch (error) {
         loading.style.display = 'none';
