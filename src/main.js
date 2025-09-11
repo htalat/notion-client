@@ -3,7 +3,7 @@ const CONFIG = {
     API_BASE: 'https://api.htalat.com',
     // For local development, use:
     // API_BASE: 'http://localhost:3000',
-    BATCH_SIZE: 5, // Process weeks in batches to avoid blocking UI
+    WEEKS_TO_FETCH: 10, // Number of weeks to fetch in single API call
 };
 
 // Cache DOM templates for better performance
@@ -106,51 +106,65 @@ async function loadWeeklyData() {
     const errorDiv = document.getElementById('error');
     
     try {
-        // Create all fetch promises in parallel with caching and retry logic
-        const weekPromises = Array.from({ length: 10 }, (_, week) => 
-            fetchWithCache(`${CONFIG.API_BASE}/knowledge-base?weeksAgo=${week}`)
-                .then(response => response.json())
-                .then(apiData => ({ week, apiData }))
-                .catch(err => {
-                    console.warn(`Failed to load week ${week} after retries:`, err);
-                    return { week, error: err.message };
-                })
-        );
+        // Single API call to fetch all weeks data
+        const response = await fetchWithCache(`${CONFIG.API_BASE}/knowledge-base?weeks=${CONFIG.WEEKS_TO_FETCH}`);
+        const allWeeksData = await response.json();
         
-        // Wait for all requests to complete
-        const results = await Promise.all(weekPromises);
-        
-        // Process results in order, handling both successful and failed requests
-        const successfulResults = results.filter(result => !result.error);
-        const failedResults = results.filter(result => result.error);
-        
-        // Show partial error message if some weeks failed to load
-        if (failedResults.length > 0) {
-            const partialErrorDiv = document.createElement('div');
-            partialErrorDiv.className = 'partial-error';
-            partialErrorDiv.textContent = `Warning: ${failedResults.length} week${failedResults.length > 1 ? 's' : ''} could not be loaded`;
-            container.appendChild(partialErrorDiv);
+        // Process the bulk response
+        if (Array.isArray(allWeeksData)) {
+            // Handle array response (one object per week)
+            allWeeksData
+                .sort((a, b) => (a.week || 0) - (b.week || 0)) // Ensure weeks are rendered in order
+                .forEach((weekApiData, index) => {
+                    const week = weekApiData.week !== undefined ? weekApiData.week : index;
+                    const weekData = {
+                        week,
+                        weekLabel: getWeekLabel(week),
+                        dateRange: weekApiData.dateRange,
+                        pages: weekApiData.pages || [],
+                        totalCount: weekApiData.totalCount || (weekApiData.pages ? weekApiData.pages.length : 0)
+                    };
+                    
+                    renderWeek(weekData, container);
+                });
+        } else if (allWeeksData.weeks) {
+            // Handle object response with weeks property
+            Object.entries(allWeeksData.weeks)
+                .map(([weekKey, weekApiData]) => ({
+                    week: parseInt(weekKey, 10),
+                    apiData: weekApiData
+                }))
+                .sort((a, b) => a.week - b.week)
+                .forEach(({ week, apiData }) => {
+                    const weekData = {
+                        week,
+                        weekLabel: getWeekLabel(week),
+                        dateRange: apiData.dateRange,
+                        pages: apiData.pages || [],
+                        totalCount: apiData.totalCount || (apiData.pages ? apiData.pages.length : 0)
+                    };
+                    
+                    renderWeek(weekData, container);
+                });
+        } else {
+            // Fallback: treat as single week data
+            const weekData = {
+                week: 0,
+                weekLabel: getWeekLabel(0),
+                dateRange: allWeeksData.dateRange,
+                pages: allWeeksData.pages || [],
+                totalCount: allWeeksData.totalCount || (allWeeksData.pages ? allWeeksData.pages.length : 0)
+            };
+            
+            renderWeek(weekData, container);
         }
-        
-        successfulResults
-            .sort((a, b) => a.week - b.week) // Ensure weeks are rendered in order
-            .forEach(({ week, apiData }) => {
-                const weekData = {
-                    week,
-                    weekLabel: getWeekLabel(week),
-                    dateRange: apiData.dateRange,
-                    pages: apiData.pages || [],
-                    totalCount: apiData.totalCount
-                };
-                
-                renderWeek(weekData, container);
-            });
         
         loading.style.display = 'none';
     } catch (error) {
         loading.style.display = 'none';
         errorDiv.style.display = 'block';
         errorDiv.textContent = `Error loading data: ${error.message}`;
+        console.error('Failed to load weekly data:', error);
     }
 }
 
