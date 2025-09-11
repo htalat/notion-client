@@ -50,100 +50,101 @@ function getWeekLabel(weeksAgo) {
 }
 
 
-function renderWeek(weekData, container) {
-    const section = document.createElement('div');
-    section.className = 'week-section';
-    
-    const weekHeader = document.createElement('div');
-    weekHeader.className = 'week-header';
-    
-    const titleDiv = document.createElement('div');
-    const title = document.createElement('h2');
-    title.className = 'week-title';
-    title.innerHTML = weekData.weekLabel + '<span class="collapse-indicator">▼</span>';
-    const dateRange = document.createElement('div');
-    dateRange.className = 'week-date';
-    dateRange.textContent = weekData.dateRange;
-    titleDiv.appendChild(title);
-    titleDiv.appendChild(dateRange);
-    
-    const pageCount = document.createElement('span');
-    pageCount.className = 'page-count';
-    pageCount.textContent = `${weekData.totalCount} page${weekData.totalCount !== 1 ? 's' : ''}`;
-    
-    weekHeader.appendChild(titleDiv);
-    weekHeader.appendChild(pageCount);
-    section.appendChild(weekHeader);
-    
-    // Create content wrapper
-    const weekContent = document.createElement('div');
-    weekContent.className = 'week-content';
-    
-    // Default to collapsed for all weeks except "This Week" (week 0)
-    const isCollapsed = weekData.week !== 0;
-    if (isCollapsed) {
-        weekContent.classList.add('collapsed');
-        title.querySelector('.collapse-indicator').classList.add('collapsed');
+function fillSlot(element, slotName, content) {
+    const slot = element.querySelector(`slot[name="${slotName}"]`);
+    if (slot) {
+        if (typeof content === 'string') {
+            slot.textContent = content;
+        } else {
+            slot.replaceWith(content);
+        }
     }
+}
+
+function setSlotAttribute(element, dataSlot, value) {
+    const target = element.querySelector(`[data-slot="${dataSlot}"]`);
+    if (target) {
+        target.href = value;
+    }
+}
+
+function renderWeek(weekData, container) {
+    const template = document.getElementById('week-template');
+    const weekElement = template.content.cloneNode(true);
     
+    fillSlot(weekElement, 'week-label', weekData.weekLabel);
+    fillSlot(weekElement, 'date-range', weekData.dateRange);
+    fillSlot(weekElement, 'page-count', `${weekData.totalCount} page${weekData.totalCount !== 1 ? 's' : ''}`);
+    
+    let weekContent;
     if (weekData.pages.length === 0) {
         const noPages = document.createElement('div');
         noPages.className = 'no-pages';
         noPages.textContent = 'No pages created this week';
-        weekContent.appendChild(noPages);
+        weekContent = noPages;
     } else {
         const pagesList = document.createElement('ul');
         pagesList.className = 'pages-list';
         
         weekData.pages.forEach(page => {
-            const item = document.createElement('li');
-            item.className = 'page-item';
+            const pageTemplate = document.getElementById('page-item-template');
+            const pageElement = pageTemplate.content.cloneNode(true);
             
-            const title = document.createElement('div');
-            title.className = 'page-title';
-            title.textContent = page.title;
-            
-            const meta = document.createElement('div');
-            meta.className = 'page-meta';
-            
-            const created = document.createElement('span');
-            created.innerHTML = `📅 Created: ${page.createdTime}`;
-            meta.appendChild(created);
+            fillSlot(pageElement, 'page-title', page.title);
+            fillSlot(pageElement, 'created-time', page.createdTime);
             
             if (page.parentInfo) {
-                const parent = document.createElement('span');
+                const parentTemplate = document.getElementById('parent-info-template');
+                const parentElement = parentTemplate.content.cloneNode(true);
                 const icon = page.parentInfo.type === 'database' ? '📊' : '📄';
-                parent.innerHTML = `${icon} ${page.parentInfo.title}`;
-                meta.appendChild(parent);
+                fillSlot(parentElement, 'parent-icon', icon);
+                fillSlot(parentElement, 'parent-title', page.parentInfo.title);
+                fillSlot(pageElement, 'parent-info', parentElement);
+            } else {
+                const parentSlot = pageElement.querySelector('slot[name="parent-info"]');
+                if (parentSlot) parentSlot.remove();
             }
             
             if (page.linkProperty) {
-                const link = document.createElement('span');
-                link.innerHTML = `🔗 <a href="${page.linkProperty}" target="_blank" class="page-link">External Link</a>`;
-                meta.appendChild(link);
+                const linkTemplate = document.getElementById('external-link-template');
+                const linkElement = linkTemplate.content.cloneNode(true);
+                setSlotAttribute(linkElement, 'external-url', page.linkProperty);
+                fillSlot(pageElement, 'external-link', linkElement);
+            } else {
+                const linkSlot = pageElement.querySelector('slot[name="external-link"]');
+                if (linkSlot) linkSlot.remove();
             }
             
-            const pageUrl = document.createElement('span');
-            pageUrl.innerHTML = `📄 <a href="${page.url}" target="_blank" class="page-link">Open in Notion</a>`;
-            meta.appendChild(pageUrl);
+            setSlotAttribute(pageElement, 'notion-url', page.url);
             
-            item.appendChild(title);
-            item.appendChild(meta);
-            pagesList.appendChild(item);
+            pagesList.appendChild(pageElement);
         });
         
-        weekContent.appendChild(pagesList);
+        weekContent = pagesList;
+    }
+    
+    fillSlot(weekElement, 'week-content', weekContent);
+    
+    const section = weekElement.querySelector('.week-section');
+    const weekHeader = section.querySelector('.week-header');
+    const weekContentDiv = section.querySelector('.week-content');
+    const title = section.querySelector('.week-title');
+    
+    // Default to collapsed for all weeks except "This Week" (week 0)
+    const isCollapsed = weekData.week !== 0;
+    if (isCollapsed) {
+        weekContentDiv.classList.add('collapsed');
+        title.querySelector('.collapse-indicator').classList.add('collapsed');
     }
     
     // Add click handler for collapsing
     weekHeader.addEventListener('click', () => {
         const indicator = title.querySelector('.collapse-indicator');
-        weekContent.classList.toggle('collapsed');
+        weekContentDiv.classList.toggle('collapsed');
         indicator.classList.toggle('collapsed');
     });
     
-    section.appendChild(weekContent);
-    container.appendChild(section);
+    container.appendChild(weekElement);
 }
 
 // Load data when page loads
