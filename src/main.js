@@ -1,8 +1,8 @@
 // Configuration
 const CONFIG = {
-  // API_BASE: 'https://api.htalat.com',
+  API_BASE: "https://api.htalat.com",
   // For local development, use:
-  API_BASE: "http://localhost:4001",
+  //   API_BASE: "http://localhost:4001",
 };
 
 // Cache DOM templates for better performance
@@ -267,7 +267,9 @@ function updatePaginationControls(hasNextPage, hasPrevPage) {
   if (currentWeeksAgo === 0) {
     weekInfo.textContent = "Current Week";
   } else {
-    weekInfo.textContent = `${currentWeeksAgo} week${currentWeeksAgo === 1 ? '' : 's'} ago`;
+    weekInfo.textContent = `${currentWeeksAgo} week${
+      currentWeeksAgo === 1 ? "" : "s"
+    } ago`;
   }
 
   paginationDiv.appendChild(prevButton);
