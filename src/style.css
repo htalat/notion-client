@@ -30,6 +30,9 @@ h1 {
     margin-bottom: 24px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     border: 1px solid #e2e8f0;
+    /* Enable GPU acceleration for better performance */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 .week-header {
@@ -46,6 +49,7 @@ h1 {
 .week-header:hover {
     background-color: #f7fafc;
     border-radius: 8px;
+    transform: translateZ(0);
 }
 
 .week-title {
@@ -131,9 +135,22 @@ h1 {
     margin-bottom: 20px;
 }
 
+.partial-error {
+    background: #fef5e7;
+    color: #d69e2e;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    border-left: 4px solid #d69e2e;
+    font-size: 0.9rem;
+}
+
 .week-content {
-    transition: all 0.3s ease;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    /* Use GPU acceleration for smooth animations */
+    transform: translateZ(0);
+    will-change: max-height;
 }
 
 .week-content.collapsed {
@@ -145,7 +162,10 @@ h1 {
 .collapse-indicator {
     margin-left: 8px;
     font-size: 0.8rem;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Enable GPU acceleration */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 .collapse-indicator.collapsed {
